@@ -1,0 +1,98 @@
+.books-root {
+    width: 100%;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.book-card {
+    width: 22%!important;
+    height: 427px;
+    border-radius: 0!important;
+    -webkit-box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12)!important;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2),0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12)!important;
+}
+
+.card-content .meta {
+	line-height: 20px;
+}
+
+.book-img-wrap {
+    height: 250px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.book-img-wrap:hover img {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.book-img-wrap img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0!important;
+    -o-object-fit: cover;
+    object-fit: cover;
+    -o-object-position: 50% 0;
+    object-position: 50% 0;
+    -webkit-transition: all .5s ease-in-out;
+    -o-transition: all .5s ease-in-out;
+    transition: all .5s ease-in-out;
+}
+
+.book-img-wrap:hover .book-img-shade {
+    opacity: 1;
+}
+
+.book-img-wrap .book-img-shade {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.65);
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+    opacity: 0;
+    -webkit-transition: all .35s ease-in-out;
+    -o-transition: all .35s ease-in-out;
+    transition: all .35s ease-in-out;
+}
+
+.book-img-shade .ui.button.book-img-button {
+    color: #fff;
+    border: 2px solid #fff;
+    background-color: transparent;
+}
+.book-card .content.extra{
+    cursor: pointer;
+}
+
+.book-card .content.extra a:hover { 
+    color: #fff !important;
+}
+
+.book-card .content.extra a:active i,
+.book-card .content.extra a:visited i { 
+    color: red !important;
+}
+
+.book-card .content.extra:hover {
+    background: purple;
+    color: #fff!important;
+    -webkit-transition: all .35s ease-in-out;
+    -o-transition: all .35s ease-in-out;
+    transition: all .35s ease-in-out;
+}

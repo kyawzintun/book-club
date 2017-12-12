@@ -1,0 +1,29 @@
+.search-root {
+    width: 100%;
+    padding: 20px 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.search-root .ui.input input {
+    width: 35vw;
+    margin: 0 auto;
+    border: none;
+    border-bottom: 2px solid #909090;
+    text-align: center;
+    font-family: Josefin Sans,sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    border-radius: 0;
+    padding-top: 14px;
+    padding-bottom: 12px;
+    padding-left: 50px!important;
+    padding-right: 50px!important;
+    -webkit-transition: all .35 ease-in-out;
+    -o-transition: all .35 ease-in-out;
+    transition: all .35 ease-in-out;
+}

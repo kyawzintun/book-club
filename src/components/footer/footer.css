@@ -1,0 +1,19 @@
+.footer-root {
+    padding: 85px 30px 100px;
+    width: 100%;
+    background-color: #303135;
+    color: #e6e6e6;
+    position: relative;
+}
+
+.footer-box{
+	text-align: left;
+}
+
+.footer-box .list .item {
+	margin-bottom: 10px;
+}
+
+.contacts {
+	vertical-align: middle;
+}

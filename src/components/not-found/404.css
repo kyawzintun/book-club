@@ -1,0 +1,12 @@
+.not-fount-root h1{
+	font-weight: 700;
+    margin: 0;
+    font-size: 4em;
+    text-transform: uppercase;
+    text-shadow: 0 0 50px #000;
+    color: #000;
+    letter-spacing: 5px;
+    -webkit-transition: all .35s ease-in-out;
+    -o-transition: all .35s ease-in-out;
+    transition: all .35s ease-in-out;
+}

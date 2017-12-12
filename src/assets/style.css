@@ -1,0 +1,35 @@
+.account-container {
+	min-height: 500px;
+}
+
+.account-title {
+	text-align: center;
+	margin: 0 auto;
+}
+
+.account-title h1 {
+	font-weight: 700;
+    margin: 0;
+    font-size: 4em;
+    text-transform: uppercase;
+    text-shadow: 0 0 50px #000;
+    color: #000;
+    letter-spacing: 5px;
+    -webkit-transition: all .35s ease-in-out;
+    -o-transition: all .35s ease-in-out;
+    transition: all .35s ease-in-out;
+}
+
+.form-root {
+	width: 35vw;
+    margin: 0 auto;
+    margin-top: 80px;
+}
+
+.ui.button:disabled, 
+.ui.buttons .disabled.button, 
+.ui.disabled.active.button, 
+.ui.disabled.button, 
+.ui.disabled.button:hover {
+    opacity: 1 !important;
+}
