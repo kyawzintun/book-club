@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Card, Icon, Image, Button } from 'semantic-ui-react';
-import store from 'store';
 import PropTypes from "prop-types";
+import store from 'store';
 import axios from 'axios';
 
 import coverImg from '../../assets/img-not-found.jpg';
@@ -53,6 +53,7 @@ class BooksRoot extends Component {
 
 	render() {
 		const type = this.props.type;
+		const userId = store.get('user') ? store.get('user')._id : null;
 		return (
 			<div className="books-root">
 		      	{
@@ -88,7 +89,10 @@ class BooksRoot extends Component {
 							    	{type === 'wish' &&
 							      		<a><Icon name='trash' />Remove from my wish list</a>
 							    	}
-							    	{type === 'add-to-wish' &&
+							    	{(type === 'add-to-wish' && userId === book.ownerId) &&
+							      		<a><Icon name='trash' />Remove from my book list</a>
+							    	}
+							    	{(type === 'add-to-wish' && userId != book.ownerId) &&
 							      		<a><Icon name='heart' />Add to my wish list</a>
 							    	}
 							    	{type === 'req' &&

@@ -8,7 +8,6 @@ class BookDetailsModal extends Component {
 	render() {
 		const book = this.props.book;
 		const type = this.props.type;
-		console.log('type ', type);
 		return (
 			<Modal className="book-details-modal" dimmer="blurring" open={this.props.modalOpen} onClose={this.props.handleClose} closeIcon>
 			  <Modal.Header>{book.title}</Modal.Header>
