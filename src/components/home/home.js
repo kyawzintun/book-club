@@ -9,7 +9,6 @@ import BookDetailsModal from '../common/book-details-modal';
 import BookView from '../common/book-view';
 import SearchBook from '../common/search-book';
 
-const lists = [];
 const baseUrl = process.env.REACT_APP_API_URL;
 
 class Home extends Component {

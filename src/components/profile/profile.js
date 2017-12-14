@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Container, Divider, Statistic, Icon,Header } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import store from 'store';
 
 import isLoggedIn from '../../helper/auth';
 import BookDetailsModal from '../common/book-details-modal';
@@ -13,6 +14,8 @@ import Footer from '../footer/footer';
 import './profile.css';
 
 const baseUrl = process.env.REACT_APP_API_URL;
+const user = store.get('user') || {};
+const reqHeader= { 'email': user.email, 'password': user.password };
 
 class Profile extends Component {
 	constructor() {
@@ -23,9 +26,10 @@ class Profile extends Component {
 			infoModalOpen: false,
 			keyword: '',
 			googleBooks: [],
+			ownBooks: [],
 			bookObj:{},
 			loading: false,
-			type:'' 
+			type:''
 		};
 		this.handleOpen = this.handleOpen.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -42,6 +46,15 @@ class Profile extends Component {
 
 	handleChange(e) {
 		this.setState({keyword: e.target.value});
+	}
+
+	handleClose = () => this.setState({ modalOpen: false, infoModalOpen: false });
+
+	handleItemClick = (name) => {
+		this.setState({ activeItem: name });
+		if(name==='ownBooks') {
+			this.getOwnBook();
+		}
 	}
 
 	searchBook(e) {
@@ -65,9 +78,20 @@ class Profile extends Component {
 		}
 	}
 
-	handleClose = () => this.setState({ modalOpen: false, infoModalOpen: false });
-
-	handleItemClick = (name) => this.setState({ activeItem: name });
+	getOwnBook = () => {
+		let _this = this;
+		axios({
+		  	method: 'get',
+		  	headers: reqHeader,
+		  	url: baseUrl + 'get-books/' + user._id 
+		}).then(function (res) {
+		   	console.log(res);
+		   	_this.setState({ownBooks: res.data})
+		}).catch(err => {
+		   	_this.setState({ownBooks: []})
+		    console.log(err.response);
+		});
+	}
 
 	render() {
 		const { activeItem } = this.state;
@@ -125,7 +149,7 @@ class Profile extends Component {
 							<BookView books={this.state.googleBooks} handleOpen={this.handleOpen} type="add" />
 						}
 						{ activeItem === 'ownBooks' &&
-							<BookView books={[]} handleOpen={this.handleOpen} type="own" />
+							<BookView books={this.state.ownBooks} handleOpen={this.handleOpen} type="own" />
 						}
 						{ activeItem === 'wishList' &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="wish" />

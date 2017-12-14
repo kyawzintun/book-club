@@ -3,6 +3,7 @@ import { Card, Icon, Image, Button } from 'semantic-ui-react';
 import PropTypes from "prop-types";
 import store from 'store';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 import coverImg from '../../assets/img-not-found.jpg';
 import './book-view.css'
@@ -46,8 +47,10 @@ class BooksRoot extends Component {
 	      data: book
 	    }).then(function (res) {
 	      	console.log('add success ', res);
+	      	toast.success(`${res.data.title} successfully added to your book list`)
 	    }).catch(err => {
-			console.log('error ', err);
+	    	toast.error(err.response.data.error);
+			console.log('error ', err.response);
 	    })
 	}
 
@@ -106,6 +109,13 @@ class BooksRoot extends Component {
 						);
 		      		})
 		      	}
+		      	<ToastContainer
+		          position="top-right"
+		          autoClose={3000}
+		          hideProgressBar={false}
+		          newestOnTop={false}
+		          closeOnClick
+		          pauseOnHover />
 		    </div>
 		);
 	}
