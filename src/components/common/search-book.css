@@ -27,3 +27,14 @@
     -o-transition: all .35 ease-in-out;
     transition: all .35 ease-in-out;
 }
+
+.search-root .ui.input input:focus {
+    border-bottom: 2px solid #26AAE1;
+}
+
+i.search-loading.icon.loading {
+    font-size: 1.8rem;
+    color: #26AAE1;
+    position: relative;
+    left: -40px;
+}

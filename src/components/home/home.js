@@ -3,11 +3,11 @@ import { Container} from 'semantic-ui-react';
 
 import NavBar from '../navbar/navbar';
 import Footer from '../footer/footer';
-import BookDetailsModal from '../common/book-modal';
+import BookDetailsModal from '../common/book-details-modal';
 import BookView from '../common/book-view';
 import SearchBook from '../common/search-book';
 
-const lists = [1,2,3,4,5,6,7,8,9,10];
+const lists = [];
 
 class Home extends Component {
   state = { modalOpen: false }
@@ -20,11 +20,11 @@ class Home extends Component {
     return (
       <div className='App' >
         <NavBar />
-        <Container style={{ marginTop: '7em' }}>
+        <Container style={{ marginTop: '7em', minHeight: '500px' }}>
     			<SearchBook placeholder={"Search books in the club..."}/>
-    			<BookView lists={lists} handleOpen={this.handleOpen} />
+    			<BookView books={[]} handleOpen={this.handleOpen} type="add-to-wish" />
   	    </Container>
-  	    <BookDetailsModal modalOpen={this.state.modalOpen} handleClose={this.handleClose}/>
+  	    <BookDetailsModal modalOpen={this.state.modalOpen} handleClose={this.handleClose} book={[]} type="add-to-wish" />
         <Footer />
       </div>
     );

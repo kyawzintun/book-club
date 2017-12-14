@@ -76,6 +76,11 @@
     border: 2px solid #fff;
     background-color: transparent;
 }
+
+.book-subtitle {
+    margin-bottom: 10px;
+}
+
 .book-card .content.extra{
     cursor: pointer;
 }

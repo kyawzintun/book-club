@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Container, Divider, Statistic, Icon,Header } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 import isLoggedIn from '../../helper/auth';
-import BookDetailsModal from '../common/book-modal';
+import BookDetailsModal from '../common/book-details-modal';
 import EditInfoModal from '../common/edit-info-modal';
 import BookView from '../common/book-view';
 import SearchBook from '../common/search-book';
@@ -11,19 +12,56 @@ import NavBar from '../navbar/navbar';
 import Footer from '../footer/footer';
 import './profile.css';
 
+const baseUrl = process.env.REACT_APP_API_URL;
+
 class Profile extends Component {
 	constructor() {
 		super();
-		this.state = { activeItem: "addNew", modalOpen: false, infoModalOpen: false };
+		this.state = { 
+			activeItem: "addNew", 
+			modalOpen: false, 
+			infoModalOpen: false,
+			keyword: '',
+			googleBooks: [],
+			bookObj:{},
+			loading: false,
+			type:'' 
+		};
 		this.handleOpen = this.handleOpen.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.searchBook = this.searchBook.bind(this);
 	}
 
-	handleOpen (type) {
-		console.log(type);
-		if(type === 'edit') {
-			this.setState({ infoModalOpen: true });
-		}else {
-			this.setState({ modalOpen: true });
+	handleOpen(book, type) {
+		this.setState({bookObj:book,modalOpen: true, type: type});
+	}
+
+	openEditModal() {
+		this.setState({ infoModalOpen: true });
+	}
+
+	handleChange(e) {
+		this.setState({keyword: e.target.value});
+	}
+
+	searchBook(e) {
+		let _this = this;
+		if(e.key === 'Enter' && this.state.keyword) {
+			if(this.state.keyword) {
+				this.setState({loading: true});
+				axios({
+		      	  method: 'get',
+		      	  url: baseUrl + 'search-books?keyword=' + this.state.keyword
+		      	}).then(function (res) {
+		      		console.log(res);
+					_this.setState({googleBooks: res.data, loading: false})
+		      	}).catch(err => {
+		      	  console.log(err.response);
+		      	  _this.setState({googleBooks: [], loading: false})
+		      	});
+			}else {
+				_this.setState({googleBooks: []});
+			}
 		}
 	}
 
@@ -42,7 +80,7 @@ class Profile extends Component {
 				<Container style={{ marginTop: '7em' }} className="profile-container">
 					<div className="profile-root">
 						<div className="user-info">
-						    <Header size='huge' as='h1'>Kyaw Zin Tun <a onClick={()=>this.handleOpen('edit')} className="user-info-edit"><Icon name="edit"/>Edit</a></Header>
+						    <Header size='huge' as='h1'>Kyaw Zin Tun <a onClick={()=>this.openEditModal()} className="user-info-edit"><Icon name="edit"/>Edit</a></Header>
 						    <Header as='h3'><Icon name="mail" />kyawzintun@amdon.com</Header>
 						    <Header as='h3'><Icon name="marker" />Yangon</Header>
 						</div>
@@ -62,9 +100,9 @@ class Profile extends Component {
 						      <Statistic.Label>WISH LIST</Statistic.Label>
 						    </Statistic>
 
-						    <Statistic className={(activeItem === 'requested' ? 'active' : '')} onClick={()=>this.handleItemClick("requested")}>
+						    <Statistic className={(activeItem === 'required' ? 'active' : '')} onClick={()=>this.handleItemClick("requested")}>
 						      <Statistic.Value>3</Statistic.Value>
-						      <Statistic.Label>REQUESTED</Statistic.Label>
+						      <Statistic.Label>REQUIRED</Statistic.Label>
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'given' ? 'active' : '')} onClick={()=>this.handleItemClick("given")}>
@@ -80,28 +118,30 @@ class Profile extends Component {
 						<Divider />
 						{ activeItem === 'addNew' &&
 							<div className="add-new-wrapper">
-								<SearchBook placeholder={"Search and add books..."} />
-								<BookView lists={[]} handleOpen={()=>this.handleOpen('details')} />
+								<SearchBook handleChange={this.handleChange} searchBook={this.searchBook} loading={this.state.loading} keyword={this.state.keyword} placeholder={"Search and add books..."} />
 							</div>
 						}
+						{ activeItem === 'addNew' &&
+							<BookView books={this.state.googleBooks} handleOpen={this.handleOpen} type="add" />
+						}
 						{ activeItem === 'ownBooks' &&
-							<BookView lists={[1,2,3, 4]} handleOpen={this.handleOpen} />
+							<BookView books={[]} handleOpen={this.handleOpen} type="own" />
 						}
 						{ activeItem === 'wishList' &&
-							<BookView lists={[1,2]} handleOpen={this.handleOpen} />
+							<BookView books={[]} handleOpen={this.handleOpen} type="wish" />
 						}
-						{ activeItem === 'requested' &&
-							<BookView lists={[1,2,3]} handleOpen={this.handleOpen} />
-						}
-						{ activeItem === 'given' &&
-							<BookView lists={[1,2,3,4,5]} handleOpen={this.handleOpen} />
+						{ activeItem === 'required' &&
+							<BookView books={[]} handleOpen={this.handleOpen} type="req" />
 						}
 						{ activeItem === 'given' &&
-							<BookView lists={[]} handleOpen={this.handleOpen} />
+							<BookView books={[]} handleOpen={this.handleOpen} type="given" />
+						}
+						{ activeItem === 'received' &&
+							<BookView books={[]} handleOpen={this.handleOpen} type="received" />
 						}
 					</div>
 				</Container>
-				<BookDetailsModal modalOpen={this.state.modalOpen} handleClose={this.handleClose}/>
+				<BookDetailsModal book={this.state.bookObj} type={this.state.type} modalOpen={this.state.modalOpen} handleClose={this.handleClose}/>
 				<EditInfoModal infoModalOpen={this.state.infoModalOpen} handleClose={this.handleClose}/>
 				<Footer />
 			</div>

@@ -9,7 +9,7 @@ $ npm install
 $ npm start
 ```
 
-App should now be running on [localhost:3000](http://localhost:3000/).
+App should now be running on [localhost:3500](http://localhost:3500/).
 
 
 *[Demo](https://kyawzintun.github.io/book-club)*
