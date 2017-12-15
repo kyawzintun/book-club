@@ -28,6 +28,7 @@ class Profile extends Component {
 			googleBooks: [],
 			ownBooks: [],
 			wishedBooks: [],
+			requiredBooks: [],
 			bookObj:{},
 			loading: false,
 			type:''
@@ -115,6 +116,22 @@ class Profile extends Component {
 		});
 	}
 
+	getRequiredList = () => {
+		this.setState({ activeItem: 'required' });
+		let _this = this;
+		axios({
+		  	method: 'get',
+		  	headers: reqHeader,
+		  	url: baseUrl + 'required-list/' + user._id 
+		}).then(function (res) {
+		   	console.log(res);
+		   	_this.setState({requiredBooks: res.data})
+		}).catch(err => {
+		   	_this.setState({requiredBooks: []})
+		    console.log(err.response);
+		});
+	}
+
 	render() {
 		const { activeItem } = this.state;
 		if (!isLoggedIn()) {
@@ -146,7 +163,7 @@ class Profile extends Component {
 						      <Statistic.Label>WISH LIST</Statistic.Label>
 						    </Statistic>
 
-						    <Statistic className={(activeItem === 'required' ? 'active' : '')} onClick={()=>this.handleItemClick("requested")}>
+						    <Statistic className={(activeItem === 'required' ? 'active' : '')} onClick={()=>this.getRequiredList()}>
 						      <Statistic.Value>3</Statistic.Value>
 						      <Statistic.Label>REQUIRED</Statistic.Label>
 						    </Statistic>
@@ -177,7 +194,7 @@ class Profile extends Component {
 							<BookView books={this.state.wishedBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="wish" />
 						}
 						{ activeItem === 'required' &&
-							<BookView books={[]} handleOpen={this.handleOpen} type="req" />
+							<BookView books={this.state.requiredBooks} handleOpen={this.handleOpen} type="req" />
 						}
 						{ activeItem === 'given' &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="given" />

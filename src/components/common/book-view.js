@@ -154,7 +154,7 @@ class BooksRoot extends Component {
 							        <span className='date'>Pages : {book.pageCount}</span>
 							      </Card.Meta>
 							    </Card.Content>
-							    <Card.Content extra>
+							    <Card.Content extra className={(type === 'req' ? 'card-footer-wrap' : '')}>
 							    	{type === 'add' &&
 							      		<a onClick={()=>this.addToMyBook(book)}><Icon name='plus' />Add to my books</a>
 							    	}
@@ -171,9 +171,13 @@ class BooksRoot extends Component {
 							      		<a onClick={()=>this.addToWishList(book,i,userId)}><Icon name='heart' />Add to my wish list</a>
 							    	}
 							    	{type === 'req' &&
-							      		<div className='ui two buttons'>
-								          <Button icon="cancel" basic color='red'>Reject</Button>
-								          <Button icon="check" basic color='green'>Confirm</Button>
+							      		<div className='decision-btn'>
+								          <Button basic size="tiny" color='red'>
+								          	<Icon name="cancel"/>Reject
+								          </Button>
+								          <Button basic size="tiny" color='green'>
+								          	<Icon name="check"/>Confirm
+								          </Button>
 								        </div>
 							    	}
 							    </Card.Content>

@@ -84,7 +84,7 @@
 .book-card .content.extra{
     cursor: pointer;
 }
-
+.book-card .content.extra:hover a,
 .book-card .content.extra a:hover { 
     color: #fff !important;
 }
@@ -100,4 +100,13 @@
     -webkit-transition: all .35s ease-in-out;
     -o-transition: all .35s ease-in-out;
     transition: all .35s ease-in-out;
+}
+
+.book-card .card-footer-wrap:hover {
+    background: #fff !important;
+    color: rgba(0,0,0,.4) !important;
+}
+
+.decision-btn {
+    text-align: center;
 }
