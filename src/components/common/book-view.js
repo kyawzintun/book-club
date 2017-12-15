@@ -21,6 +21,7 @@ class BooksRoot extends Component {
 	  super(props, context);
 
 	  this.removeMyBook = this.removeMyBook.bind(this);
+	  this.removeFromWishList = this.removeFromWishList.bind(this);
 	}
 
 	formatTitle(title) {
@@ -34,28 +35,24 @@ class BooksRoot extends Component {
 			const email = user.email;
 			const password = user.password;
 			book.ownerId = userId;
-			book.requested = false;
+			book.requestedId = null;
 			console.log(book);
-			this.callApi(book, email, password);
+			axios({
+		      method: 'post',
+		      headers: reqHeader,
+		      url: baseUrl + 'add-book',
+		      data: book
+		    }).then(function (res) {
+		      	console.log('add success ', res);
+		      	toast.success(`${res.data.title} successfully added to your book list`)
+		    }).catch(err => {
+		    	toast.error(err.response.data.error);
+				console.log('error ', err.response);
+		    })
 		}else {
 			store.remove('user');
 			this.context.router.history.push('/');
 		}
-	}
-
-	callApi(book,email,password){
-		axios({
-	      method: 'post',
-	      headers: reqHeader,
-	      url: baseUrl + 'add-book',
-	      data: book
-	    }).then(function (res) {
-	      	console.log('add success ', res);
-	      	toast.success(`${res.data.title} successfully added to your book list`)
-	    }).catch(err => {
-	    	toast.error(err.response.data.error);
-			console.log('error ', err.response);
-	    })
 	}
 
 	removeMyBook = (book,index) => {
@@ -70,8 +67,55 @@ class BooksRoot extends Component {
 		      data: data
 		    }).then(res => {
 		      	console.log('remove success ', res);
-		      	_this.props.handleDelete(book.id);
+		      	_this.props.handleDelete(book.id,'ownBooks');
 		      	toast.success(`${book.title} successfully removed from your book list`)
+		    }).catch(err => {
+		    	toast.error(err.response.data.error);
+				console.log('error ', err.response);
+		    })
+		}else {
+			store.remove('user');
+			this.context.router.history.push('/');
+		}
+	}
+
+	addToWishList = (book, i, userId) => {
+		let _this = this;
+		if(userId) {
+			book.requestedId = userId;
+			axios({
+		      method: 'put',
+		      headers: reqHeader,
+		      url: baseUrl + 'request-book',
+		      data: book
+		    }).then(function (res) {
+		      	console.log('add success ', res);
+		      	_this.props.handleWishList(book.id);
+		      	toast.success(`${book.title} successfully added to your wish list`)
+		    }).catch(err => {
+		    	toast.error(err.response.data.error);
+				console.log('error ', err.response);
+		    })
+		}else {
+			store.remove('user');
+			this.context.router.history.push('/login');
+		}
+	}
+
+	removeFromWishList = (book,index) => {
+		const user = store.get('user');
+		let _this = this;
+		if(user) {
+			const data = { "reqId":user._id,"id":book.id };
+			axios({
+		      method: 'put',
+		      headers: reqHeader,
+		      url: baseUrl + 'remove-from-wishlist',
+		      data: data
+		    }).then(res => {
+		      	console.log('remove success ', res);
+		      	_this.props.handleDelete(book.id,'wishedBooks');
+		      	toast.success(`${book.title} successfully removed from your wish list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
 				console.log('error ', err.response);
@@ -118,13 +162,13 @@ class BooksRoot extends Component {
 							      		<a onClick={()=>this.removeMyBook(book,i)}><Icon name='trash' />Remove from my book list</a>
 							    	}
 							    	{type === 'wish' &&
-							      		<a><Icon name='trash' />Remove from my wish list</a>
+							      		<a onClick={()=>this.removeFromWishList(book,i)}><Icon name='trash' />Remove from my wish list</a>
 							    	}
 							    	{(type === 'add-to-wish' && userId === book.ownerId) &&
 							      		<a><Icon name='trash' />Remove from my book list</a>
 							    	}
 							    	{(type === 'add-to-wish' && userId != book.ownerId) &&
-							      		<a><Icon name='heart' />Add to my wish list</a>
+							      		<a onClick={()=>this.addToWishList(book,i,userId)}><Icon name='heart' />Add to my wish list</a>
 							    	}
 							    	{type === 'req' &&
 							      		<div className='ui two buttons'>

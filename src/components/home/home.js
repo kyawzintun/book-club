@@ -23,6 +23,7 @@ class Home extends Component {
     }
 
     this.getAllBooks = this.getAllBooks.bind(this);
+    this.handleWishList = this.handleWishList.bind(this);
   }
 
   componentDidMount() {
@@ -48,13 +49,19 @@ class Home extends Component {
 
   handleClose = () => this.setState({ modalOpen: false });
 
+  handleWishList = (id) => {
+      this.setState(prevState => ({
+          books: prevState.books.filter(el => el.id != id )
+      }));
+  }
+
   render() {
     return (
       <div className='App' >
         <NavBar />
         <Container style={{ marginTop: '7em', minHeight: '500px' }}>
     			<SearchBook placeholder={"Search books in the club..."}/>
-    			<BookView books={this.state.books} handleOpen={this.handleOpen} type="add-to-wish" />
+    			<BookView books={this.state.books} handleOpen={this.handleOpen} handleWishList={this.handleWishList} type="add-to-wish" />
   	    </Container>
   	    <BookDetailsModal book={this.state.book} type={this.state.type} modalOpen={this.state.modalOpen} handleClose={this.handleClose} type="add-to-wish" />
         <Footer />

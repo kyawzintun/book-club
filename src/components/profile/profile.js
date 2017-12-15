@@ -27,6 +27,7 @@ class Profile extends Component {
 			keyword: '',
 			googleBooks: [],
 			ownBooks: [],
+			wishedBooks: [],
 			bookObj:{},
 			loading: false,
 			type:''
@@ -49,19 +50,16 @@ class Profile extends Component {
 		this.setState({keyword: e.target.value});
 	}
 
-	handleDelete(id){
-	    this.setState(prevState => ({
-	        ownBooks: prevState.ownBooks.filter(el => el.id != id )
-	    }));
+	handleDelete(id, type){
+		this.setState(prevState => ({
+		    [type]: prevState[type].filter(el => el.id != id )
+		}));
 	}
 
 	handleClose = () => this.setState({ modalOpen: false, infoModalOpen: false });
 
 	handleItemClick = (name) => {
 		this.setState({ activeItem: name });
-		if(name==='ownBooks') {
-			this.getOwnBook();
-		}
 	}
 
 	searchBook(e) {
@@ -86,6 +84,7 @@ class Profile extends Component {
 	}
 
 	getOwnBook = () => {
+		this.setState({ activeItem: 'ownBooks' });
 		let _this = this;
 		axios({
 		  	method: 'get',
@@ -96,6 +95,22 @@ class Profile extends Component {
 		   	_this.setState({ownBooks: res.data})
 		}).catch(err => {
 		   	_this.setState({ownBooks: []})
+		    console.log(err.response);
+		});
+	}
+
+	getWishList = () => {
+		this.setState({ activeItem: 'wishList' });
+		let _this = this;
+		axios({
+		  	method: 'get',
+		  	headers: reqHeader,
+		  	url: baseUrl + 'wish-list/' + user._id 
+		}).then(function (res) {
+		   	console.log(res);
+		   	_this.setState({wishedBooks: res.data})
+		}).catch(err => {
+		   	_this.setState({wishedBooks: []})
 		    console.log(err.response);
 		});
 	}
@@ -121,12 +136,12 @@ class Profile extends Component {
 						      <Statistic.Label>ADD NEW</Statistic.Label>
 						    </Statistic>
 
-						    <Statistic className={(activeItem === 'ownBooks' ? 'active' : '')} onClick={()=>this.handleItemClick("ownBooks")}>
+						    <Statistic className={(activeItem === 'ownBooks' ? 'active' : '')} onClick={()=>this.getOwnBook()}>
 						      <Statistic.Value>4</Statistic.Value>
 						      <Statistic.Label>YOUR BOOKS</Statistic.Label>
 						    </Statistic>
 
-						    <Statistic className={(activeItem === 'wishList' ? 'active' : '')} onClick={()=>this.handleItemClick("wishList")}>
+						    <Statistic className={(activeItem === 'wishList' ? 'active' : '')} onClick={()=>this.getWishList()}>
 						      <Statistic.Value>2</Statistic.Value>
 						      <Statistic.Label>WISH LIST</Statistic.Label>
 						    </Statistic>
@@ -159,7 +174,7 @@ class Profile extends Component {
 							<BookView books={this.state.ownBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="own" />
 						}
 						{ activeItem === 'wishList' &&
-							<BookView books={[]} handleOpen={this.handleOpen} type="wish" />
+							<BookView books={this.state.wishedBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="wish" />
 						}
 						{ activeItem === 'required' &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="req" />
