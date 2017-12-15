@@ -9,6 +9,8 @@ import coverImg from '../../assets/img-not-found.jpg';
 import './book-view.css'
 
 const baseUrl = process.env.REACT_APP_API_URL;
+const user = store.get('user') || {};
+const reqHeader= { 'email': user.email, 'password': user.password };
 
 class BooksRoot extends Component {
 	static contextTypes = {
@@ -17,6 +19,8 @@ class BooksRoot extends Component {
 
 	constructor(props, context) {
 	  super(props, context);
+
+	  this.removeMyBook = this.removeMyBook.bind(this);
 	}
 
 	formatTitle(title) {
@@ -42,7 +46,7 @@ class BooksRoot extends Component {
 	callApi(book,email,password){
 		axios({
 	      method: 'post',
-	      headers: { 'email': email, 'password': password },
+	      headers: reqHeader,
 	      url: baseUrl + 'add-book',
 	      data: book
 	    }).then(function (res) {
@@ -52,6 +56,30 @@ class BooksRoot extends Component {
 	    	toast.error(err.response.data.error);
 			console.log('error ', err.response);
 	    })
+	}
+
+	removeMyBook = (book,index) => {
+		const user = store.get('user');
+		let _this = this;
+		if(user) {
+			const data = { "ownerId":user._id,"id":book.id };
+			axios({
+		      method: 'delete',
+		      headers: reqHeader,
+		      url: baseUrl + 'remove-book',
+		      data: data
+		    }).then(res => {
+		      	console.log('remove success ', res);
+		      	_this.props.handleDelete(book.id);
+		      	toast.success(`${book.title} successfully removed from your book list`)
+		    }).catch(err => {
+		    	toast.error(err.response.data.error);
+				console.log('error ', err.response);
+		    })
+		}else {
+			store.remove('user');
+			this.context.router.history.push('/');
+		}
 	}
 
 	render() {
@@ -87,7 +115,7 @@ class BooksRoot extends Component {
 							      		<a onClick={()=>this.addToMyBook(book)}><Icon name='plus' />Add to my books</a>
 							    	}
 							    	{type === 'own' &&
-							      		<a><Icon name='trash' />Remove from my book list</a>
+							      		<a onClick={()=>this.removeMyBook(book,i)}><Icon name='trash' />Remove from my book list</a>
 							    	}
 							    	{type === 'wish' &&
 							      		<a><Icon name='trash' />Remove from my wish list</a>

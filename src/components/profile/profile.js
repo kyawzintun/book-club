@@ -32,6 +32,7 @@ class Profile extends Component {
 			type:''
 		};
 		this.handleOpen = this.handleOpen.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.searchBook = this.searchBook.bind(this);
 	}
@@ -46,6 +47,12 @@ class Profile extends Component {
 
 	handleChange(e) {
 		this.setState({keyword: e.target.value});
+	}
+
+	handleDelete(id){
+	    this.setState(prevState => ({
+	        ownBooks: prevState.ownBooks.filter(el => el.id != id )
+	    }));
 	}
 
 	handleClose = () => this.setState({ modalOpen: false, infoModalOpen: false });
@@ -149,7 +156,7 @@ class Profile extends Component {
 							<BookView books={this.state.googleBooks} handleOpen={this.handleOpen} type="add" />
 						}
 						{ activeItem === 'ownBooks' &&
-							<BookView books={this.state.ownBooks} handleOpen={this.handleOpen} type="own" />
+							<BookView books={this.state.ownBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="own" />
 						}
 						{ activeItem === 'wishList' &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="wish" />
