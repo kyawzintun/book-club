@@ -41,12 +41,10 @@ class BooksRoot extends Component {
 		      url: baseUrl + 'add-book',
 		      data: book
 		    }).then(function (res) {
-		      	console.log('add success ', res);
 		      	_this.props.componentDidMount();
 		      	toast.success(`${res.data.title} successfully added to your book list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
-				console.log('error ', err.response);
 		    })
 		}else {
 			store.remove('user');
@@ -64,12 +62,10 @@ class BooksRoot extends Component {
 		      url: baseUrl + 'remove-book',
 		      data: data
 		    }).then(res => {
-		      	console.log('remove success ', res);
 		      	_this.props.handleDelete(book.id,'ownBooks');
 		      	toast.success(`${book.title} successfully removed from your book list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
-				console.log('error ', err.response);
 		    })
 		}else {
 			store.remove('user');
@@ -87,12 +83,10 @@ class BooksRoot extends Component {
 		      url: baseUrl + 'request-book',
 		      data: book
 		    }).then(function (res) {
-		      	console.log('add success ', res);
 		      	_this.props.handleWishList(book.id);
 		      	toast.success(`${book.title} successfully added to your wish list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
-				console.log('error ', err.response);
 		    })
 		}else {
 			store.remove('user');
@@ -111,7 +105,6 @@ class BooksRoot extends Component {
 		      url: baseUrl + 'remove-from-wishlist',
 		      data: data
 		    }).then(res => {
-		      	console.log('remove success ', res);
 		      	_this.props.handleDelete(book.id,'wishedBooks');
 		      	toast.success(`${book.title} successfully removed from your wish list`)
 		    }).catch(err => {
@@ -134,7 +127,6 @@ class BooksRoot extends Component {
 		      url: baseUrl + 'confirm-request',
 		      data: data
 		    }).then(res => {
-		      	console.log('reject success ', res);
 		      	_this.props.handleDelete(book.id,'requiredBooks');
 		      	toast.success(`${book.title} successfully traded.`)
 		    }).catch(err => {
