@@ -33,3 +33,12 @@
 .ui.disabled.button:hover {
     opacity: 1 !important;
 }
+
+.inline-loader {
+    margin-top: 50px !important;
+}
+
+.modal-action {
+    margin: 10px 0px;
+    float:right;
+}

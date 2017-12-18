@@ -209,7 +209,7 @@ class BooksRoot extends Component {
 							    	{(type === 'add-to-wish' && userId === book.ownerId) &&
 							      		<a><Icon name='trash' />Remove from my book list</a>
 							    	}
-							    	{(type === 'add-to-wish' && userId != book.ownerId) &&
+							    	{(type === 'add-to-wish' && userId !== book.ownerId) &&
 							      		<a onClick={()=>this.addToWishList(book,userId)}><Icon name='heart' />Add to my wish list</a>
 							    	}
 							    	{type === 'req' &&

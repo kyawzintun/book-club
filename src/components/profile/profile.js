@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Divider, Statistic, Icon,Header } from 'semantic-ui-react';
+import { Container, Divider, Statistic, Icon, Header } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import store from 'store';
@@ -9,6 +9,7 @@ import BookDetailsModal from '../common/book-details-modal';
 import EditInfoModal from '../common/edit-info-modal';
 import BookView from '../common/book-view';
 import SearchBook from '../common/search-book';
+import InlineLoader from '../common/inline-loader';
 import NavBar from '../navbar/navbar';
 import Footer from '../footer/footer';
 import './profile.css';
@@ -53,7 +54,7 @@ class Profile extends Component {
 
 	handleDelete(id, type){
 		this.setState(prevState => ({
-		    [type]: prevState[type].filter(el => el.id != id )
+		    [type]: prevState[type].filter(el => el.id !== id )
 		}));
 	}
 
@@ -72,10 +73,8 @@ class Profile extends Component {
 		      	  method: 'get',
 		      	  url: baseUrl + 'search-books?keyword=' + this.state.keyword
 		      	}).then(function (res) {
-		      		console.log(res);
-					_this.setState({googleBooks: res.data, loading: false})
+				  _this.setState({googleBooks: res.data, loading: false})
 		      	}).catch(err => {
-		      	  console.log(err.response);
 		      	  _this.setState({googleBooks: [], loading: false})
 		      	});
 			}else {
@@ -85,55 +84,50 @@ class Profile extends Component {
 	}
 
 	getOwnBook = () => {
-		this.setState({ activeItem: 'ownBooks' });
+		this.setState({ activeItem: 'ownBooks', loading: true });
 		let _this = this;
 		axios({
 		  	method: 'get',
 		  	headers: reqHeader,
 		  	url: baseUrl + 'get-books/' + user._id 
 		}).then(function (res) {
-		   	console.log(res);
-		   	_this.setState({ownBooks: res.data})
+		   	_this.setState({ownBooks: res.data, loading: false });
 		}).catch(err => {
-		   	_this.setState({ownBooks: []})
-		    console.log(err.response);
+		   	_this.setState({ownBooks: [], loading: false });
 		});
 	}
 
 	getWishList = () => {
-		this.setState({ activeItem: 'wishList' });
+		this.setState({ activeItem: 'wishList', loading: true });
 		let _this = this;
 		axios({
 		  	method: 'get',
 		  	headers: reqHeader,
 		  	url: baseUrl + 'wish-list/' + user._id 
 		}).then(function (res) {
-		   	console.log(res);
-		   	_this.setState({wishedBooks: res.data})
+		   	_this.setState({wishedBooks: res.data, loading: false });
 		}).catch(err => {
-		   	_this.setState({wishedBooks: []})
-		    console.log(err.response);
+		   	_this.setState({wishedBooks: [], loading: false });
 		});
 	}
 
 	getRequiredList = () => {
-		this.setState({ activeItem: 'required' });
+		this.setState({ activeItem: 'required', loading: true });
 		let _this = this;
 		axios({
 		  	method: 'get',
 		  	headers: reqHeader,
 		  	url: baseUrl + 'required-list/' + user._id 
 		}).then(function (res) {
-		   	console.log(res);
-		   	_this.setState({requiredBooks: res.data})
+		   	_this.setState({requiredBooks: res.data, loading: false })
 		}).catch(err => {
-		   	_this.setState({requiredBooks: []})
-		    console.log(err.response);
+		   	_this.setState({requiredBooks: [], loading: false })
 		});
 	}
 
 	render() {
 		const { activeItem } = this.state;
+		const userObj = store.get('user');
 		if (!isLoggedIn()) {
 	      return (<Redirect to="/" />);
 	    }
@@ -143,9 +137,9 @@ class Profile extends Component {
 				<Container style={{ marginTop: '7em' }} className="profile-container">
 					<div className="profile-root">
 						<div className="user-info">
-						    <Header size='huge' as='h1'>Kyaw Zin Tun <a onClick={()=>this.openEditModal()} className="user-info-edit"><Icon name="edit"/>Edit</a></Header>
-						    <Header as='h3'><Icon name="mail" />kyawzintun@amdon.com</Header>
-						    <Header as='h3'><Icon name="marker" />Yangon</Header>
+						    <Header size='huge' as='h1'>{userObj.username} <a onClick={()=>this.openEditModal()} className="user-info-edit"><Icon name="edit"/>Edit</a></Header>
+						    <Header as='h3'><Icon name="mail" />{userObj.email}</Header>
+						    <Header as='h3'><Icon name="marker" />{userObj.address}</Header>
 						</div>
 						<Statistic.Group className="user-book-tab">
 						    <Statistic className={(activeItem === 'addNew' ? 'active' : '')} onClick={()=>this.handleItemClick("addNew")}>
@@ -187,25 +181,28 @@ class Profile extends Component {
 						{ activeItem === 'addNew' &&
 							<BookView books={this.state.googleBooks} handleOpen={this.handleOpen} type="add" />
 						}
-						{ activeItem === 'ownBooks' &&
+						{ ((activeItem === 'ownBooks' || activeItem === 'wishList' || activeItem === 'required' || activeItem === 'given' || activeItem === 'received') && this.state.loading) &&
+							<InlineLoader />
+						}
+						{ (activeItem === 'ownBooks' && !this.state.loading) &&
 							<BookView books={this.state.ownBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="own" />
 						}
-						{ activeItem === 'wishList' &&
+						{ (activeItem === 'wishList' && !this.state.loading)&&
 							<BookView books={this.state.wishedBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="wish" />
 						}
-						{ activeItem === 'required' &&
+						{ (activeItem === 'required' && !this.state.loading)&&
 							<BookView books={this.state.requiredBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="req" />
 						}
-						{ activeItem === 'given' &&
+						{ (activeItem === 'given' && !this.state.loading) &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="given" />
 						}
-						{ activeItem === 'received' &&
+						{ (activeItem === 'received' && !this.state.loading) &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="received" />
 						}
 					</div>
 				</Container>
 				<BookDetailsModal book={this.state.bookObj} type={this.state.type} modalOpen={this.state.modalOpen} handleClose={this.handleClose}/>
-				<EditInfoModal infoModalOpen={this.state.infoModalOpen} handleClose={this.handleClose}/>
+				<EditInfoModal infoModalOpen={this.state.infoModalOpen} handleClose={this.handleClose} />
 				<Footer />
 			</div>
 		);

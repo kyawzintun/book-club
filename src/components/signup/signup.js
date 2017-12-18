@@ -111,14 +111,7 @@ class Signup extends Component {
 						<MyInput changeValue={this.handleChange} name="username" type="text" value={this.state.username} icon='user' error={this.state.usernameError} placeholder='Your username...' minLength={6} maxLength={32} />
 					    <MyInput changeValue={this.handleChange} name="password" type="password" value={this.state.password} icon='lock' error={this.state.passwordError} placeholder='Your password...' />
 					    <MyInput changeValue={this.handleChange} name="address" type="text" value={this.state.address} icon='marker' error={this.state.addressError} placeholder='Your address as City, Country...' maxLength={32} />
-					    <Button type="submit" disabled={!isEnabled} fluid size="big" color="linkedin">
-							{this.state.submitted &&
-								<Loader size="tiny" inverted active inline='centered' />
-					    	}
-					    	{!this.state.submitted &&
-								<span>Signup</span>
-					    	}
-					    </Button>
+					    <Button type="submit" disabled={!isEnabled} fluid size="big" color="linkedin" loading={this.state.submitted} />
 				  	</Form>
   	    		</Container>
 				<Footer />

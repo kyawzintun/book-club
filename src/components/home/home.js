@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container} from 'semantic-ui-react';
+import { Container, Dimmer, Loader } from 'semantic-ui-react';
 import axios from 'axios';
 import store from 'store';
 
@@ -19,7 +19,8 @@ class Home extends Component {
       books: [],
       book:{},
       type:'',
-      loading: false 
+      loading: false,
+      initLoading: true 
     }
 
     this.getAllBooks = this.getAllBooks.bind(this);
@@ -38,10 +39,10 @@ class Home extends Component {
       url: baseUrl + 'get-books'
     }).then(function (res) {
       console.log(res);
-      _this.setState({books: res.data, loading: false});
+      _this.setState({books: res.data, loading: false, initLoading: false });
     }).catch(err => {
       console.log(err.response);
-      _this.setState({books: [], loading: false})
+      _this.setState({books: [], loading: false, initLoading: false})
     });
   }
 
@@ -51,7 +52,7 @@ class Home extends Component {
 
   handleWishList = (id) => {
       this.setState(prevState => ({
-          books: prevState.books.filter(el => el.id != id )
+          books: prevState.books.filter(el => el.id !== id )
       }));
   }
 
@@ -61,6 +62,11 @@ class Home extends Component {
         <NavBar />
         <Container style={{ marginTop: '7em', minHeight: '500px' }}>
     			<SearchBook placeholder={"Search books in the club..."}/>
+          {this.state.initLoading && 
+            <Dimmer active inverted>
+              <Loader inverted>Loading</Loader>
+            </Dimmer>
+          }
     			<BookView books={this.state.books} handleOpen={this.handleOpen} handleWishList={this.handleWishList} type="add-to-wish" />
   	    </Container>
   	    <BookDetailsModal book={this.state.book} type={this.state.type} modalOpen={this.state.modalOpen} handleClose={this.handleClose} type="add-to-wish" />
