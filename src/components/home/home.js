@@ -17,6 +17,7 @@ class Home extends Component {
       modalOpen: false,
       books: [],
       book:{},
+      keyword: '',
       loading: false,
       initLoading: true 
     }
@@ -30,16 +31,39 @@ class Home extends Component {
   }
 
   getAllBooks = () => {
-    this.setState({loading: true})
     let _this = this;
     axios({
       method: 'get',
       url: baseUrl + 'get-books'
     }).then(function (res) {
-      _this.setState({books: res.data, loading: false, initLoading: false });
+      _this.setState({books: res.data,loading:false, initLoading: false });
     }).catch(err => {
-      _this.setState({books: [], loading: false, initLoading: false})
+      _this.setState({books: [],loading:false, initLoading: false})
     });
+  }
+
+  searchBook = (e) => {
+    let _this = this;
+    if(e.key === 'Enter') {
+      if(this.state.keyword) {
+        this.setState({loading: true});
+        axios({
+          method: 'get',
+          url: baseUrl + 'get-books?keyword=' + this.state.keyword
+        }).then(function (res) {
+          _this.setState({books: res.data, loading: false})
+        }).catch(err => {
+          _this.setState({books: [], loading: false})
+        });
+      }else {
+        this.setState({loading: true});
+        this.getAllBooks();
+      }
+    }
+  }
+
+  handleChange = (e) => {
+    this.setState({keyword: e.target.value});
   }
 
   handleOpen = (book, type) => this.setState({ modalOpen: true, book: book, type: type });
@@ -57,7 +81,7 @@ class Home extends Component {
       <div className='App' >
         <NavBar />
         <Container style={{ marginTop: '7em', minHeight: '500px' }}>
-    			<SearchBook placeholder={"Search books in the club..."}/>
+    			<SearchBook handleChange={this.handleChange} searchBook={this.searchBook} loading={this.state.loading} keyword={this.state.keyword} placeholder={"Search books in the club..."}/>
           {this.state.initLoading && 
             <Dimmer active inverted>
               <Loader inverted>Loading</Loader>

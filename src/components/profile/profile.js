@@ -105,6 +105,7 @@ class Profile extends Component {
 				this.setState({loading: true});
 				axios({
 		      	  method: 'get',
+		      	  headers: reqHeader,
 		      	  url: baseUrl + 'search-books?keyword=' + this.state.keyword
 		      	}).then(function (res) {
 				  _this.setState({googleBooks: res.data, loading: false})
