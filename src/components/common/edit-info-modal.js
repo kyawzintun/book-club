@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, Button, Header, Form, Loader } from 'semantic-ui-react';
+import { Modal, Button, Header, Form } from 'semantic-ui-react';
 import axios from 'axios';
 import store from 'store';
 import { ToastContainer, toast } from 'react-toastify';

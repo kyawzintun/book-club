@@ -29,10 +29,14 @@ class Profile extends Component {
 			ownBooksCount: 0,
 			wishedBooksCount: 0,
 			requiredBooksCount: 0,
+			givenBooksCount: 0,
+			receiveBooksCount: 0,
 			googleBooks: [],
 			ownBooks: [],
 			wishedBooks: [],
 			requiredBooks: [],
+			givenBooks: [],
+			receiveBooks: [],
 			bookObj:{},
 			loading: false,
 			type:''
@@ -54,12 +58,16 @@ class Profile extends Component {
 				ownBooksCount: res.data.ownBookCount,
 				wishedBooksCount: res.data.wishListCount,
 				requiredBooksCount: res.data.requireCount,
+				givenBooksCount: res.data.givenCount,
+				receiveBooksCount: res.data.receiveCount,
 			})
 	    }).catch(err => {
 	    	_this.setState({
 				ownBooksCount: 0,
 				wishedBooksCount: 0,
-				requiredBooksCount: 0
+				requiredBooksCount: 0,
+				givenBooksCount: 0,
+				receiveBooksCount: 0
 			})
 	      console.log(err.response);
 	    });
@@ -151,6 +159,34 @@ class Profile extends Component {
 		});
 	}
 
+	getGivenList = () => {
+		this.setState({ activeItem: 'given', loading: true });
+		let _this = this;
+		axios({
+		  	method: 'get',
+		  	headers: reqHeader,
+		  	url: baseUrl + 'given-list/' + user._id 
+		}).then(function (res) {
+		   	_this.setState({givenBooks: res.data, loading: false })
+		}).catch(err => {
+		   	_this.setState({givenBooks: [], loading: false })
+		});
+	}
+
+	getReceiveList = () => {
+		this.setState({ activeItem: 'received', loading: true });
+		let _this = this;
+		axios({
+		  	method: 'get',
+		  	headers: reqHeader,
+		  	url: baseUrl + 'receive-list/' + user._id 
+		}).then(function (res) {
+		   	_this.setState({receiveBooks: res.data, loading: false })
+		}).catch(err => {
+		   	_this.setState({receiveBooks: [], loading: false })
+		});
+	}
+
 	render() {
 		const { activeItem } = this.state;
 		const userObj = store.get('user');
@@ -188,13 +224,13 @@ class Profile extends Component {
 						      <Statistic.Label>REQUIRED</Statistic.Label>
 						    </Statistic>
 
-						    <Statistic className={(activeItem === 'given' ? 'active' : '')} onClick={()=>this.handleItemClick("given")}>
-						      <Statistic.Value>5</Statistic.Value>
+						    <Statistic className={(activeItem === 'given' ? 'active' : '')} onClick={()=>this.getGivenList()}>
+						      <Statistic.Value>{this.state.givenBooksCount}</Statistic.Value>
 						      <Statistic.Label>GIVEN</Statistic.Label>
 						    </Statistic>
 
-						    <Statistic className={(activeItem === 'received' ? 'active' : '')} onClick={()=>this.handleItemClick("received")}>
-						      <Statistic.Value>0</Statistic.Value>
+						    <Statistic className={(activeItem === 'received' ? 'active' : '')} onClick={()=>this.getReceiveList()}>
+						      <Statistic.Value>{this.state.receiveBooksCount}</Statistic.Value>
 						      <Statistic.Label>RECEIVED</Statistic.Label>
 						    </Statistic>
 						</Statistic.Group>
@@ -220,10 +256,10 @@ class Profile extends Component {
 							<BookView books={this.state.requiredBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="req" />
 						}
 						{ (activeItem === 'given' && !this.state.loading) &&
-							<BookView books={[]} handleOpen={this.handleOpen} type="given" />
+							<BookView books={this.state.givenBooks} handleOpen={this.handleOpen} type="given" />
 						}
 						{ (activeItem === 'received' && !this.state.loading) &&
-							<BookView books={[]} handleOpen={this.handleOpen} type="received" />
+							<BookView books={this.state.receiveBooks} handleOpen={this.handleOpen} type="received" />
 						}
 					</div>
 				</Container>

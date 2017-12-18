@@ -34,7 +34,6 @@ class BooksRoot extends Component {
 			book.ownerId = user._id;
 			book.originalOwnerId = user._id;
 			book.requestedId = null;
-			console.log(book);
 			axios({
 		      method: 'post',
 		      headers: reqHeader,

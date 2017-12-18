@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Dimmer, Loader } from 'semantic-ui-react';
 import axios from 'axios';
-import store from 'store';
 
 import NavBar from '../navbar/navbar';
 import Footer from '../footer/footer';
@@ -18,7 +17,6 @@ class Home extends Component {
       modalOpen: false,
       books: [],
       book:{},
-      type:'',
       loading: false,
       initLoading: true 
     }
@@ -38,10 +36,8 @@ class Home extends Component {
       method: 'get',
       url: baseUrl + 'get-books'
     }).then(function (res) {
-      console.log(res);
       _this.setState({books: res.data, loading: false, initLoading: false });
     }).catch(err => {
-      console.log(err.response);
       _this.setState({books: [], loading: false, initLoading: false})
     });
   }
@@ -69,7 +65,7 @@ class Home extends Component {
           }
     			<BookView books={this.state.books} handleOpen={this.handleOpen} handleWishList={this.handleWishList} type="add-to-wish" />
   	    </Container>
-  	    <BookDetailsModal book={this.state.book} type={this.state.type} modalOpen={this.state.modalOpen} handleClose={this.handleClose} type="add-to-wish" />
+  	    <BookDetailsModal book={this.state.book} modalOpen={this.state.modalOpen} handleClose={this.handleClose} type="add-to-wish" />
         <Footer />
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Container,Button, Form, Loader } from 'semantic-ui-react';
+import { Container,Button, Form } from 'semantic-ui-react';
 import axios from 'axios';
 import store from 'store';
 
