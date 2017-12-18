@@ -26,6 +26,9 @@ class Profile extends Component {
 			modalOpen: false, 
 			infoModalOpen: false,
 			keyword: '',
+			ownBookCount: 0,
+			wishListCount: 0,
+			requireCount: 0,
 			googleBooks: [],
 			ownBooks: [],
 			wishedBooks: [],
@@ -38,6 +41,28 @@ class Profile extends Component {
 		this.handleDelete = this.handleDelete.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 		this.searchBook = this.searchBook.bind(this);
+	}
+
+	componentDidMount = () => {
+		const _this = this;
+		axios({
+	      method: 'get',
+	      headers: reqHeader,
+	      url: baseUrl + 'get-counts/' + user._id
+	    }).then(function (res) {
+			_this.setState({
+				ownBookCount: res.data.ownBookCount,
+				wishListCount: res.data.wishListCount,
+				requireCount: res.data.requireCount,
+			})
+	    }).catch(err => {
+	    	_this.setState({
+				ownBookCount: 0,
+				wishListCount: 0,
+				requireCount: 0
+			})
+	      console.log(err.response);
+	    });
 	}
 
 	handleOpen(book, type) {
@@ -148,17 +173,17 @@ class Profile extends Component {
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'ownBooks' ? 'active' : '')} onClick={()=>this.getOwnBook()}>
-						      <Statistic.Value>4</Statistic.Value>
+						      <Statistic.Value>{this.state.ownBookCount}</Statistic.Value>
 						      <Statistic.Label>YOUR BOOKS</Statistic.Label>
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'wishList' ? 'active' : '')} onClick={()=>this.getWishList()}>
-						      <Statistic.Value>2</Statistic.Value>
+						      <Statistic.Value>{this.state.wishListCount}</Statistic.Value>
 						      <Statistic.Label>WISH LIST</Statistic.Label>
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'required' ? 'active' : '')} onClick={()=>this.getRequiredList()}>
-						      <Statistic.Value>3</Statistic.Value>
+						      <Statistic.Value>{this.state.requireCount}</Statistic.Value>
 						      <Statistic.Label>REQUIRED</Statistic.Label>
 						    </Statistic>
 
