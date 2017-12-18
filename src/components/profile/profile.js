@@ -194,7 +194,7 @@ class Profile extends Component {
 							<BookView books={this.state.wishedBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="wish" />
 						}
 						{ activeItem === 'required' &&
-							<BookView books={this.state.requiredBooks} handleOpen={this.handleOpen} type="req" />
+							<BookView books={this.state.requiredBooks} handleOpen={this.handleOpen} handleDelete={this.handleDelete} type="req" />
 						}
 						{ activeItem === 'given' &&
 							<BookView books={[]} handleOpen={this.handleOpen} type="given" />

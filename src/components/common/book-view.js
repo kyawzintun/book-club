@@ -29,12 +29,9 @@ class BooksRoot extends Component {
 	}
 
 	addToMyBook(book){
-		const user = store.get('user');
 		if(user) {
-			const userId = user._id;
-			const email = user.email;
-			const password = user.password;
-			book.ownerId = userId;
+			book.ownerId = user._id;
+			book.originalOwnerId = user._id;
 			book.requestedId = null;
 			console.log(book);
 			axios({
@@ -55,8 +52,7 @@ class BooksRoot extends Component {
 		}
 	}
 
-	removeMyBook = (book,index) => {
-		const user = store.get('user');
+	removeMyBook = (book) => {
 		let _this = this;
 		if(user) {
 			const data = { "ownerId":user._id,"id":book.id };
@@ -79,7 +75,7 @@ class BooksRoot extends Component {
 		}
 	}
 
-	addToWishList = (book, i, userId) => {
+	addToWishList = (book, userId) => {
 		let _this = this;
 		if(userId) {
 			book.requestedId = userId;
@@ -102,7 +98,7 @@ class BooksRoot extends Component {
 		}
 	}
 
-	removeFromWishList = (book,index) => {
+	removeFromWishList = (book) => {
 		const user = store.get('user');
 		let _this = this;
 		if(user) {
@@ -116,6 +112,52 @@ class BooksRoot extends Component {
 		      	console.log('remove success ', res);
 		      	_this.props.handleDelete(book.id,'wishedBooks');
 		      	toast.success(`${book.title} successfully removed from your wish list`)
+		    }).catch(err => {
+		    	toast.error(err.response.data.error);
+				console.log('error ', err.response);
+		    })
+		}else {
+			store.remove('user');
+			this.context.router.history.push('/');
+		}
+	}
+
+	confirmBookTrading = (book) => {
+		let _this = this;
+		if(user) {
+			const data = { "reqId":book.requestedId,"id":book.id, "ownerId": book.ownerId };
+			axios({
+		      method: 'put',
+		      headers: reqHeader,
+		      url: baseUrl + 'confirm-request',
+		      data: data
+		    }).then(res => {
+		      	console.log('reject success ', res);
+		      	_this.props.handleDelete(book.id,'requiredBooks');
+		      	toast.success(`${book.title} successfully traded.`)
+		    }).catch(err => {
+		    	toast.error(err.response.data.error);
+				console.log('error ', err.response);
+		    })
+		}else {
+			store.remove('user');
+			this.context.router.history.push('/');
+		}
+	}
+
+	rejectBookTrading = (book) => {
+		let _this = this;
+		if(user) {
+			const data = { "reqId":book.requestedId,"id":book.id };
+			axios({
+		      method: 'put',
+		      headers: reqHeader,
+		      url: baseUrl + 'reject-request',
+		      data: data
+		    }).then(res => {
+		      	console.log('reject success ', res);
+		      	_this.props.handleDelete(book.id,'requiredBooks');
+		      	toast.success(`${book.title} successfully reject from your require list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
 				console.log('error ', err.response);
@@ -159,23 +201,23 @@ class BooksRoot extends Component {
 							      		<a onClick={()=>this.addToMyBook(book)}><Icon name='plus' />Add to my books</a>
 							    	}
 							    	{type === 'own' &&
-							      		<a onClick={()=>this.removeMyBook(book,i)}><Icon name='trash' />Remove from my book list</a>
+							      		<a onClick={()=>this.removeMyBook(book)}><Icon name='trash' />Remove from my book list</a>
 							    	}
 							    	{type === 'wish' &&
-							      		<a onClick={()=>this.removeFromWishList(book,i)}><Icon name='trash' />Remove from my wish list</a>
+							      		<a onClick={()=>this.removeFromWishList(book)}><Icon name='trash' />Remove from my wish list</a>
 							    	}
 							    	{(type === 'add-to-wish' && userId === book.ownerId) &&
 							      		<a><Icon name='trash' />Remove from my book list</a>
 							    	}
 							    	{(type === 'add-to-wish' && userId != book.ownerId) &&
-							      		<a onClick={()=>this.addToWishList(book,i,userId)}><Icon name='heart' />Add to my wish list</a>
+							      		<a onClick={()=>this.addToWishList(book,userId)}><Icon name='heart' />Add to my wish list</a>
 							    	}
 							    	{type === 'req' &&
 							      		<div className='decision-btn'>
-								          <Button basic size="tiny" color='red'>
+								          <Button onClick={()=>this.rejectBookTrading(book)} basic size="tiny" color='red'>
 								          	<Icon name="cancel"/>Reject
 								          </Button>
-								          <Button basic size="tiny" color='green'>
+								          <Button onClick={()=>this.confirmBookTrading(book)} basic size="tiny" color='green'>
 								          	<Icon name="check"/>Confirm
 								          </Button>
 								        </div>
