@@ -29,6 +29,7 @@ class BooksRoot extends Component {
 	}
 
 	addToMyBook(book){
+		const _this = this;
 		if(user) {
 			book.ownerId = user._id;
 			book.originalOwnerId = user._id;
@@ -41,6 +42,7 @@ class BooksRoot extends Component {
 		      data: book
 		    }).then(function (res) {
 		      	console.log('add success ', res);
+		      	_this.props.componentDidMount();
 		      	toast.success(`${res.data.title} successfully added to your book list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
@@ -214,12 +216,8 @@ class BooksRoot extends Component {
 							    	}
 							    	{type === 'req' &&
 							      		<div className='decision-btn'>
-								          <Button onClick={()=>this.rejectBookTrading(book)} basic size="tiny" color='red'>
-								          	<Icon name="cancel"/>Reject
-								          </Button>
-								          <Button onClick={()=>this.confirmBookTrading(book)} basic size="tiny" color='green'>
-								          	<Icon name="check"/>Confirm
-								          </Button>
+								          <Button onClick={()=>this.rejectBookTrading(book)} size="tiny" inverted color='red' icon="cancel" content="Reject" />
+								          <Button onClick={()=>this.confirmBookTrading(book)} size="tiny" inverted color='green' icon="check" content="Confirm" />
 								        </div>
 							    	}
 							    </Card.Content>

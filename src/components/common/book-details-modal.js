@@ -22,21 +22,21 @@ class BookDetailsModal extends Component {
 			    </Modal.Description>
 			  </Modal.Content>
 			  <Modal.Actions>
-	            <a href={book.infoLink} target="blank"><Button color='vk'>More Info</Button></a>
+	            <a href={book.infoLink} target="blank"><Button color='vk' content="More Info" /></a>
 	            {type === 'add' &&
 					<Button icon='plus' color='teal' content='Add to my books' />
 				}
 				{type === 'own' &&
-					<Button icon='trash' color='red' content='Remove from my book list' />
+					<Button icon='trash' inverted color='red' content='Remove from my book list' />
 				}
 				{type === 'wish' &&
-					<Button icon='trash' color='red' content='Remove from wish list' />
+					<Button icon='trash' inverted color='red' content='Remove from wish list' />
 				}
 				{type === 'add-to-wish' &&
-					<Button icon='heart' color='teal' content='Add to wish list' />
+					<Button icon='heart' inverted color='teal' content='Add to wish list' />
 				}
 				{type === 'req' &&
-					<Button icon='reply' content='Back' primary />
+					<Button icon='reply' inverted color="blue" content='Back' />
 				}
 	          </Modal.Actions>
 			</Modal>

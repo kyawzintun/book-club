@@ -26,9 +26,9 @@ class Profile extends Component {
 			modalOpen: false, 
 			infoModalOpen: false,
 			keyword: '',
-			ownBookCount: 0,
-			wishListCount: 0,
-			requireCount: 0,
+			ownBooksCount: 0,
+			wishedBooksCount: 0,
+			requiredBooksCount: 0,
 			googleBooks: [],
 			ownBooks: [],
 			wishedBooks: [],
@@ -51,15 +51,15 @@ class Profile extends Component {
 	      url: baseUrl + 'get-counts/' + user._id
 	    }).then(function (res) {
 			_this.setState({
-				ownBookCount: res.data.ownBookCount,
-				wishListCount: res.data.wishListCount,
-				requireCount: res.data.requireCount,
+				ownBooksCount: res.data.ownBookCount,
+				wishedBooksCount: res.data.wishListCount,
+				requiredBooksCount: res.data.requireCount,
 			})
 	    }).catch(err => {
 	    	_this.setState({
-				ownBookCount: 0,
-				wishListCount: 0,
-				requireCount: 0
+				ownBooksCount: 0,
+				wishedBooksCount: 0,
+				requiredBooksCount: 0
 			})
 	      console.log(err.response);
 	    });
@@ -81,6 +81,7 @@ class Profile extends Component {
 		this.setState(prevState => ({
 		    [type]: prevState[type].filter(el => el.id !== id )
 		}));
+		this.componentDidMount();
 	}
 
 	handleClose = () => this.setState({ modalOpen: false, infoModalOpen: false });
@@ -173,17 +174,17 @@ class Profile extends Component {
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'ownBooks' ? 'active' : '')} onClick={()=>this.getOwnBook()}>
-						      <Statistic.Value>{this.state.ownBookCount}</Statistic.Value>
+						      <Statistic.Value>{this.state.ownBooksCount}</Statistic.Value>
 						      <Statistic.Label>YOUR BOOKS</Statistic.Label>
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'wishList' ? 'active' : '')} onClick={()=>this.getWishList()}>
-						      <Statistic.Value>{this.state.wishListCount}</Statistic.Value>
+						      <Statistic.Value>{this.state.wishedBooksCount}</Statistic.Value>
 						      <Statistic.Label>WISH LIST</Statistic.Label>
 						    </Statistic>
 
 						    <Statistic className={(activeItem === 'required' ? 'active' : '')} onClick={()=>this.getRequiredList()}>
-						      <Statistic.Value>{this.state.requireCount}</Statistic.Value>
+						      <Statistic.Value>{this.state.requiredBooksCount}</Statistic.Value>
 						      <Statistic.Label>REQUIRED</Statistic.Label>
 						    </Statistic>
 
@@ -204,7 +205,7 @@ class Profile extends Component {
 							</div>
 						}
 						{ activeItem === 'addNew' &&
-							<BookView books={this.state.googleBooks} handleOpen={this.handleOpen} type="add" />
+							<BookView books={this.state.googleBooks} handleOpen={this.handleOpen} componentDidMount={this.componentDidMount} type="add" />
 						}
 						{ ((activeItem === 'ownBooks' || activeItem === 'wishList' || activeItem === 'required' || activeItem === 'given' || activeItem === 'received') && this.state.loading) &&
 							<InlineLoader />
