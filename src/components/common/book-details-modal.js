@@ -18,30 +18,32 @@ class BookDetailsModal extends Component {
 			      <p>{book.description}</p>
 			      <p>Author : {book.authors}</p>
 			      <p>Published On : {book.publishedDate}</p>
+			      <p>Category : {book.categories}</p>
 			      <p>Pages : {book.pageCount}</p>
 			    </Modal.Description>
 			  </Modal.Content>
 			  <Modal.Actions>
 	            <a href={book.infoLink} target="blank"><Button color='vk' content="More Info" /></a>
-	            {type === 'add' &&
-					<Button icon='plus' color='teal' content='Add to my books' />
-				}
-				{type === 'own' &&
-					<Button icon='trash' inverted color='red' content='Remove from my book list' />
-				}
-				{type === 'wish' &&
-					<Button icon='trash' inverted color='red' content='Remove from wish list' />
-				}
-				{type === 'add-to-wish' &&
-					<Button icon='heart' inverted color='teal' content='Add to wish list' />
-				}
-				{type === 'req' &&
-					<Button icon='reply' inverted color="blue" content='Back' />
-				}
 	          </Modal.Actions>
 			</Modal>
 		);
 	}
 }
+
+// {type === 'add' &&
+// 					<Button icon='plus' color='teal' content='Add to my books' />
+// 				}
+// 				{type === 'own' &&
+// 					<Button icon='trash' inverted color='red' content='Remove from my book list' />
+// 				}
+// 				{type === 'wish' &&
+// 					<Button icon='trash' inverted color='red' content='Remove from wish list' />
+// 				}
+// 				{type === 'add-to-wish' &&
+// 					<Button icon='heart' inverted color='teal' content='Add to wish list' />
+// 				}
+// 				{type === 'req' &&
+// 					<Button icon='reply' inverted color="blue" content='Back' />
+// 				}
 
 export default BookDetailsModal;

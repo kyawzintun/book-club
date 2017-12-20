@@ -87,7 +87,7 @@ class Home extends Component {
               <Loader inverted>Loading</Loader>
             </Dimmer>
           }
-    			<BookView books={this.state.books} handleOpen={this.handleOpen} handleWishList={this.handleWishList} type="add-to-wish" />
+    			<BookView books={this.state.books} handleOpen={this.handleOpen} handleDelete={this.handleWishList} type="add-to-wish" />
   	    </Container>
   	    <BookDetailsModal book={this.state.book} modalOpen={this.state.modalOpen} handleClose={this.handleClose} type="add-to-wish" />
         <Footer />

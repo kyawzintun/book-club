@@ -82,7 +82,7 @@ class BooksRoot extends Component {
 		      url: baseUrl + 'request-book',
 		      data: book
 		    }).then(function (res) {
-		      	_this.props.handleWishList(book.id);
+		      	_this.props.handleDelete(book.id);
 		      	toast.success(`${book.title} successfully added to your wish list`)
 		    }).catch(err => {
 		    	toast.error(err.response.data.error);
@@ -200,7 +200,7 @@ class BooksRoot extends Component {
 							      		<a onClick={()=>this.removeFromWishList(book)}><Icon name='trash' />Remove from my wish list</a>
 							    	}
 							    	{(type === 'add-to-wish' && userId === book.ownerId) &&
-							      		<a><Icon name='trash' />Remove from my book list</a>
+							      		<a onClick={()=>this.removeMyBook(book)}><Icon name='trash' />Remove from my book list</a>
 							    	}
 							    	{(type === 'add-to-wish' && userId !== book.ownerId) &&
 							      		<a onClick={()=>this.addToWishList(book,userId)}><Icon name='heart' />Add to my wish list</a>

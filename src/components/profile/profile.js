@@ -100,7 +100,7 @@ class Profile extends Component {
 
 	searchBook(e) {
 		let _this = this;
-		if(e.key === 'Enter' && this.state.keyword) {
+		if(e.key === 'Enter') {
 			if(this.state.keyword) {
 				this.setState({loading: true});
 				axios({
