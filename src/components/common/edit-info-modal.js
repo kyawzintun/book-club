@@ -73,12 +73,12 @@ class EditInfoModal extends Component {
 	      headers: { 'email': user.email, 'password': user.password },
 	      data: userObj
 	    }).then(function (res) {
-	    	toast.success(`Successfully updated user information.`);
+	    	toast.success(`You have successfully updated your information.`);
 	    	store.set("user", res.data);
 	    	_this.setState({submitted: false});
 	    	_this.props.handleClose();
 	    }).catch(err => {
-	    	toast.success(`Failed to update user information.`);
+	    	toast.error(`Failed to update your information.`);
 	    	_this.setState({submitted: false});
 	    })
 	}

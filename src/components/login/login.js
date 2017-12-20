@@ -105,19 +105,12 @@ class Login extends Component {
 				<NavBar />
 				<Container style={{ marginTop: '7em' }} className="account-container">
     				<div className="account-title">
-						<h1>LOGIN</h1>
+						<h1>Welcome</h1>
 					</div>
 				  	<Form className="form-root" onSubmit={this.onSubmit} >
 					    <MyInput changeValue={this.handleChange} name="email" type="email" value={this.state.email} icon='mail' error={this.state.emailError} placeholder='Your email...' maxLength={32} autoFocus="on"/>
 					    <MyInput changeValue={this.handleChange} name="password" type="password" value={this.state.password} icon='lock' error={this.state.passwordError} placeholder='Your password...' />
-					    <Button type="submit" disabled={!isEnabled} fluid size="big" color="linkedin">
-					    	{this.state.submitted &&
-								<Loader size="tiny" inverted active inline='centered' />
-					    	}
-					    	{!this.state.submitted &&
-								<span>Login</span>
-					    	}
-					    </Button>
+					    <Button type="submit" disabled={!isEnabled} fluid size="big" color="linkedin" loading={this.state.submitted} content="Login" />
 				  	</Form>
   	    		</Container>
 				<Footer />

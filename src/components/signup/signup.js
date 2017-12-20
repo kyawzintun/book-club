@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { Container,Button, Form } from 'semantic-ui-react';
 import axios from 'axios';
 import store from 'store';
+import { ToastContainer, toast } from 'react-toastify';
 
 import MyInput from '../common/input';
 import NavBar from '../navbar/navbar';
@@ -75,7 +76,7 @@ class Signup extends Component {
 		this.callApi(userObj);
 	}
 
-	callApi(userObj) {
+	callApi = (userObj) => {
 		const { history } = this.props;
 		this.setState({submitted: true});
 		let _this = this;
@@ -85,9 +86,13 @@ class Signup extends Component {
 	      data: userObj
 	    }).then(function (res) {
 	    	_this.setState({submitted: false});
-			history.push('/login')
+	    	toast.success('You have successfully registered');
+	    	setTimeout(_ => {
+				history.push('/login')
+	    	}, 1000);
 	    }).catch(err => {
 	    	_this.setState({submitted: false});
+	    	toast.error('Failed to signup');
 	    	if(err.response.status === 400) {
 				this.setState({ emailError : err.response.data.error });
 	    	}
@@ -111,10 +116,17 @@ class Signup extends Component {
 						<MyInput changeValue={this.handleChange} name="username" type="text" value={this.state.username} icon='user' error={this.state.usernameError} placeholder='Your username...' minLength={6} maxLength={32} />
 					    <MyInput changeValue={this.handleChange} name="password" type="password" value={this.state.password} icon='lock' error={this.state.passwordError} placeholder='Your password...' />
 					    <MyInput changeValue={this.handleChange} name="address" type="text" value={this.state.address} icon='marker' error={this.state.addressError} placeholder='Your address as City, Country...' maxLength={32} />
-					    <Button type="submit" disabled={!isEnabled} fluid size="big" color="linkedin" loading={this.state.submitted} />
+					    <Button type="submit" disabled={!isEnabled} fluid size="big" color="linkedin" loading={this.state.submitted} content="Signup"/>
 				  	</Form>
   	    		</Container>
 				<Footer />
+				<ToastContainer
+				    position="top-right"
+				    autoClose={3000}
+				    hideProgressBar={false}
+				    newestOnTop={false}
+				    closeOnClick
+				    pauseOnHover />
 			</div>
 		);
 	}
